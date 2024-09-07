@@ -51,7 +51,7 @@ class RecintosZoo {
             // regra dos carnívoros (Animais carnívoros devem habitar somente com a própria espécie)
             
             // regra do bioma adequado
-            const biomaAdequado = infoAnimal.bioma.includes(recinto.bioma)
+            const biomaAdequado = infoAnimal.bioma.includes(recinto.bioma);
 
 
             // regra dos hipos (Hipopótamo(s) só tolera(m) outras espécies estando num recinto com savana e rio)
@@ -65,13 +65,21 @@ class RecintosZoo {
             const espacoLivre = recinto.tamanho - espacoOcupado;
 
             // Verificar se há espaço suficiente
-            const espacoSuficiente = espacoLivre >= espacoOcupado;
+            let espacoSuficiente = espacoLivre >= espacoOcupado;
 
             // se o ambiente ja estiver ocupado, adicionar mais 1 ao espaço total necessário
             if (recinto.animais.length > 0) {
-                espacoSuficiente = espacoLivre >= (tamanhoNecessario + 1);
+                espacoSuficiente = espacoLivre >= (espacoOcupado + 1);
+            }
+
+            if (biomaAdequado && espacoSuficiente) {
+                recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivre} total ${recinto.tamanho_total})`);
             }
         });
+
+        if (recintosViaveis.length === 0) {
+            return { erro: "Não há recinto viável" };
+        }
 
         return { recintosViaveis };
     }
