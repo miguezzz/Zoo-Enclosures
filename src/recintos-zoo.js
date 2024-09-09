@@ -62,8 +62,8 @@ class RecintosZoo {
             // Verificar se há espaço suficiente
             let espacoSuficiente = espacoLivreAtual >= tamanhoNecessario;
 
-            // se o ambiente ja estiver ocupado, adicionar mais 1 ao espaço total necessário
-            if (recinto.animais.length > 0) {
+            // se o ambiente ja estiver ocupado com outra espécie, adicionar mais 1 ao espaço total necessário
+            if ((recinto.animais.length > 0) && (recinto.animais.some(a => a.especie !== animal))) {
                 espacoSuficiente = espacoLivreAtual >= (tamanhoNecessario + 1);
             }
 
