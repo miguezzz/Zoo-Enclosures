@@ -42,14 +42,14 @@ class RecintosZoo {
         }
 
         const infoAnimal = this.animais[animal];
-        const tamanhoNecessario = infoAnimal.tamanho * quantidade;
+        let tamanhoNecessario = infoAnimal.tamanho * quantidade;
         const recintosViaveis = [];
 
         // cada recinto tem que ser analisado, usarei um for each para isso
         this.recintos.forEach(recinto => {
 
             // regra do bioma adequado
-            const biomaAdequado = recinto.bioma.some(b => infoAnimal.bioma.includes(b));
+            let biomaAdequado = recinto.bioma.some(b => infoAnimal.bioma.includes(b));
 
             // espaço ocupado pelos animais dentro do recinto (antes da inserção)
             const espacoOcupado = recinto.animais.reduce((total, atual) => {
@@ -64,7 +64,8 @@ class RecintosZoo {
 
             // se o ambiente ja estiver ocupado com outra espécie, adicionar mais 1 ao espaço total necessário
             if ((recinto.animais.length > 0) && (recinto.animais.some(a => a.especie !== animal))) {
-                espacoSuficiente = espacoLivreAtual >= (tamanhoNecessario + 1);
+                tamanhoNecessario += 1;
+                espacoSuficiente = espacoLivreAtual >= tamanhoNecessario;
             }
 
             // cálculo de espaço livre depois da inserção
@@ -77,21 +78,14 @@ class RecintosZoo {
             // const temCarnivoros = recinto.animais.some(a => this.animais[a.especie].carnivoro);
             // const podeHabitar = carnivoro ? animaisPresentes.every(a => a === animal) : !temCarnivoros;
 
+            // if caso animal seja o macaco
+            // verifica se o macaco tem companhia
+            // se o macaco nao tiver companhia, o bioma não será adequado para ele.
+            if (animal === 'MACACO' && quantidade === 1) {
+                biomaAdequado = recinto.animais.length > 0; // se houver mais animais, biomaAdequado será true
+            }
 
-            // // if caso animal seja o macaco
-            // // verifica se o macaco tem companhia
-            // if (animal === 'MACACO') {
-            //     const companhiaMacaco = recinto.animais.length > 0;
-
-            //     if (biomaAdequado && espacoSuficiente && companhiaMacaco) {
-            //         recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivre} total ${recinto.tamanho_total})`);
-            //     }
-            // }
-
-            // else if (biomaAdequado && espacoSuficiente) {
-            //     recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivre} total ${recinto.tamanho_total})`);
-            // }
-
+            // adiciona recinto no array (caso seja viável)
             if (biomaAdequado && espacoSuficiente) {
                 recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivreDepois} total: ${recinto.tamanho_total})`);
             }
