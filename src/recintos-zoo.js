@@ -49,7 +49,7 @@ class RecintosZoo {
         this.recintos.forEach(recinto => {
 
             // regra do bioma adequado
-            const biomaAdequado = infoAnimal.bioma.includes(recinto.bioma);
+            const biomaAdequado = recinto.bioma.some(b => infoAnimal.bioma.includes(b));
 
             // espaço ocupado pelos animais dentro do recinto (antes da inserção)
             const espacoOcupado = recinto.animais.reduce((total, atual) => {
@@ -93,7 +93,7 @@ class RecintosZoo {
             // }
 
             if (biomaAdequado && espacoSuficiente) {
-                recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivreDepois} total ${recinto.tamanho_total})`);
+                recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivreDepois} total: ${recinto.tamanho_total})`);
             }
 
         });
