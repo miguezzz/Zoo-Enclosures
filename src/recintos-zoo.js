@@ -4,11 +4,11 @@ class RecintosZoo {
         this.recintos = [
             // array com hash tables para representar a tabela recintos pq está categorizada com índice numérico
             // em animais, um array com hash tables para representar possiveis outros animais no mesmo recinto
-            { numero: 1, bioma: ['savana'], tamanho_total: 10, animais: [{ especie: 'MACACO', quantidade: 3 }] },
-            { numero: 2, bioma: ['floresta'], tamanho_total: 5, animais: [] },
-            { numero: 3, bioma: ['savana', 'rio'], tamanho_total: 7, animais: [{ especie: 'GAZELA', quantidade: 1 }] },
-            { numero: 4, bioma: ['rio'], tamanho_total: 8, animais: [] },
-            { numero: 5, bioma: ['savana'], tamanho_total: 9, animais: [{ especie: 'LEAO', quantidade: 1 }] }
+            { numero: 1, bioma: ['savana'], tamanhoTotal: 10, animais: [{ especie: 'MACACO', quantidade: 3 }] },
+            { numero: 2, bioma: ['floresta'], tamanhoTotal: 5, animais: [] },
+            { numero: 3, bioma: ['savana', 'rio'], tamanhoTotal: 7, animais: [{ especie: 'GAZELA', quantidade: 1 }] },
+            { numero: 4, bioma: ['rio'], tamanhoTotal: 8, animais: [] },
+            { numero: 5, bioma: ['savana'], tamanhoTotal: 9, animais: [{ especie: 'LEAO', quantidade: 1 }] }
         ];
 
         this.animais = {
@@ -26,7 +26,7 @@ class RecintosZoo {
         return animal in this.animais;
     }
 
-    // verifica se a quantidade de animais é um número e se é positivo
+    // verifica se a quantidade de animais é um número inteiro e se é positivo
     isQuantidadeValida(quantidade) {
         return (Number.isInteger(quantidade) && quantidade > 0);
     }
@@ -57,7 +57,7 @@ class RecintosZoo {
             }, 0);
 
             // cálculo de espaço livre antes da inserção
-            let espacoLivreAtual = recinto.tamanho_total - espacoOcupado;
+            let espacoLivreAtual = recinto.tamanhoTotal - espacoOcupado;
 
             // se o ambiente ja estiver ocupado com outra espécie, adicionar mais 1 ao espaço total necessário
             if ((recinto.animais.length > 0) && (recinto.animais.some(a => a.especie !== animal))) {
@@ -73,9 +73,24 @@ class RecintosZoo {
             // regra dos hipos (Hipopótamo(s) só tolera(m) outras espécies estando num recinto com savana e rio)
             // const podeHabitarComHipopotamo = animal === 'HIPOPOTAMO' && recinto.bioma === 'savana e rio';
 
+            // verificação de carnívoros no recinto
+            const temCarnivoros = recinto.animais.some(a => this.animais[a.especie].carnivoro);
+            // verifica se todos os carnívoros são da mesma espécie
+            const mesmoCarnivoro = recinto.animais.every(a => a.especie === animal);
+
             // regra dos carnívoros (Animais carnívoros devem habitar somente com a própria espécie)
-            // const temCarnivoros = recinto.animais.some(a => this.animais[a.especie].carnivoro);
-            // const podeHabitar = carnivoro ? animaisPresentes.every(a => a === animal) : !temCarnivoros;
+            if (infoAnimal.carnivoro) {
+                // qualquer espécie diferente não será tolerada pelos carnívoros!!!
+                if (recinto.animais.some(a => a.especie !== animal)) {
+                    // se houver qualquer outro animal ou carnívoro diferente no recinto, não pode adicionar
+                    biomaAdequado = false;
+                }
+            } else {
+                // se o animal não é carnívoro, mas já há carnívoros no recinto, também não pode habitar
+                if (temCarnivoros) {
+                    biomaAdequado = false;
+                }
+            }
 
             // if caso animal seja o macaco
             // verifica se o macaco tem companhia
@@ -86,7 +101,7 @@ class RecintosZoo {
 
             // adiciona recinto no array (caso seja viável)
             if (biomaAdequado && espacoSuficiente) {
-                recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivreDepois} total: ${recinto.tamanho_total})`);
+                recintosViaveis.push(`Recinto ${recinto.numero} (espaço livre: ${espacoLivreDepois} total: ${recinto.tamanhoTotal})`);
             }
 
         });
