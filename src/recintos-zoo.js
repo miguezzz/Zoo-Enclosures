@@ -70,13 +70,8 @@ class RecintosZoo {
             // cálculo de espaço livre depois da inserção
             const espacoLivreDepois = espacoLivreAtual - tamanhoNecessario;
 
-            // regra dos hipos (Hipopótamo(s) só tolera(m) outras espécies estando num recinto com savana e rio)
-            // const podeHabitarComHipopotamo = animal === 'HIPOPOTAMO' && recinto.bioma === 'savana e rio';
-
             // verificação de carnívoros no recinto
             const temCarnivoros = recinto.animais.some(a => this.animais[a.especie].carnivoro);
-            // verifica se todos os carnívoros são da mesma espécie
-            const mesmoCarnivoro = recinto.animais.every(a => a.especie === animal);
 
             // regra dos carnívoros (Animais carnívoros devem habitar somente com a própria espécie)
             if (infoAnimal.carnivoro) {
@@ -85,9 +80,29 @@ class RecintosZoo {
                     // se houver qualquer outro animal ou carnívoro diferente no recinto, não pode adicionar
                     biomaAdequado = false;
                 }
-            } else {
+            } 
+            else {
                 // se o animal não é carnívoro, mas já há carnívoros no recinto, também não pode habitar
                 if (temCarnivoros) {
+                    biomaAdequado = false;
+                }
+            }
+            
+            // verificação de hipopótamos no recinto
+            const temHipos = recinto.animais.some(a => this.animais[a.especie] === 'HIPOPOTAMO');
+
+            // regra dos hipos (Hipopótamo(s) só tolera(m) outras espécies estando num recinto com savana e rio)
+            // se o animal a ser adicionado for um hipo
+            if (animal === 'HIPOPOTAMO') {
+                // caso haja algum animal no recinto diferente dele e o recinto não seja de savana E rio
+                if (recinto.animais.some(a => a.especie !== animal) && !(recinto.bioma.includes('savana') && recinto.bioma.includes('rio'))) {
+                    biomaAdequado = false;
+                }
+            }
+            // se o animal a ser adicionado não for hipo mas houver hipos no recinto
+            else if (temHipos) {
+                // caso o bioma não seja de savana e rio, não pode adicionar
+                if (!(recinto.bioma.includes('savana') && recinto.bioma.includes('rio'))) {
                     biomaAdequado = false;
                 }
             }
