@@ -57,19 +57,18 @@ class RecintosZoo {
             }, 0);
 
             // cálculo de espaço livre antes da inserção
-            const espacoLivreAtual = recinto.tamanho_total - espacoOcupado;
+            let espacoLivreAtual = recinto.tamanho_total - espacoOcupado;
+
+            // se o ambiente ja estiver ocupado com outra espécie, adicionar mais 1 ao espaço total necessário
+            if ((recinto.animais.length > 0) && (recinto.animais.some(a => a.especie !== animal))) {
+                espacoLivreAtual -= 1;
+            }
 
             // Verificar se há espaço suficiente
             let espacoSuficiente = espacoLivreAtual >= tamanhoNecessario;
 
-            // se o ambiente ja estiver ocupado com outra espécie, adicionar mais 1 ao espaço total necessário
-            if ((recinto.animais.length > 0) && (recinto.animais.some(a => a.especie !== animal))) {
-                tamanhoNecessario += 1;
-                espacoSuficiente = espacoLivreAtual >= tamanhoNecessario;
-            }
-
             // cálculo de espaço livre depois da inserção
-            const espacoLivreDepois = recinto.tamanho_total - espacoOcupado - tamanhoNecessario;
+            const espacoLivreDepois = espacoLivreAtual - tamanhoNecessario;
 
             // regra dos hipos (Hipopótamo(s) só tolera(m) outras espécies estando num recinto com savana e rio)
             // const podeHabitarComHipopotamo = animal === 'HIPOPOTAMO' && recinto.bioma === 'savana e rio';
