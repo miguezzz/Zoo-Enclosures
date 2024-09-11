@@ -111,7 +111,9 @@ class RecintosZoo {
             // verifica se o macaco tem companhia
             // se o macaco nao tiver companhia, o bioma não será adequado para ele.
             if (animal === 'MACACO' && quantidade === 1) {
-                biomaAdequado = recinto.animais.length > 0; // se houver mais animais, biomaAdequado será true
+                if (recinto.animais.length === 0) {
+                    biomaAdequado = false;
+                }
             }
 
             // adiciona recinto no array (caso seja viável)
@@ -131,5 +133,3 @@ class RecintosZoo {
 }
 
 export { RecintosZoo as RecintosZoo };
-
-// new RecintosZoo().analisaRecintos('MACACO', 2);
