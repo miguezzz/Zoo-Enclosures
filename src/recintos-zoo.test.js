@@ -37,6 +37,8 @@ describe('Recintos do Zoologico', () => {
         expect(resultado.recintosViaveis.length).toBe(3);
     });
 
+    // testes adicionados
+
     test('Deve encontrar habitat para 1 hipopótamo', () => {
 
         const resultado = new RecintosZoo().analisaRecintos('HIPOPOTAMO', 1);
@@ -44,6 +46,61 @@ describe('Recintos do Zoologico', () => {
         expect(resultado.recintosViaveis[0]).toBe('Recinto 3 (espaço livre: 0 total: 7)');
         expect(resultado.recintosViaveis[1]).toBe('Recinto 4 (espaço livre: 4 total: 8)');
         expect(resultado.recintosViaveis.length).toBe(2);
+    });
+
+    test('Deve encontrar recinto para 2 hipopótamos.', () => {
+        const resultado = new RecintosZoo().analisaRecintos('HIPOPOTAMO', 2);
+        expect(resultado.erro).toBeFalsy();
+        expect(resultado.recintosViaveis[0]).toBe('Recinto 4 (espaço livre: 0 total: 8)');
+        expect(resultado.recintosViaveis.length).toBe(1);
+    });
+
+    test('Deve encontrar recinto para 1 macaco.', () => {
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', 1);
+        expect(resultado.erro).toBeFalsy();
+        expect(resultado.recintosViaveis[0]).toBe('Recinto 1 (espaço livre: 6 total: 10)');
+        expect(resultado.recintosViaveis[1]).toBe('Recinto 3 (espaço livre: 3 total: 7)');
+        expect(resultado.recintosViaveis.length).toBe(2);
+    });
+
+    test('Deve encontrar recinto para 1 leão.', () => {
+        const resultado = new RecintosZoo().analisaRecintos('LEAO', 1);
+        expect(resultado.erro).toBeFalsy();
+        expect(resultado.recintosViaveis[0]).toBe('Recinto 5 (espaço livre: 3 total: 9)');
+        expect(resultado.recintosViaveis.length).toBe(1);
+    });
+
+    test('Deve encontrar recintos para 5 macacos (não deve adicionar no recinto 3).', () => {
+
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', 5);
+        expect(resultado.erro).toBeFalsy();
+        expect(resultado.recintosViaveis[0]).toBe('Recinto 1 (espaço livre: 2 total: 10)');
+        expect(resultado.recintosViaveis[1]).toBe('Recinto 2 (espaço livre: 0 total: 5)');
+        expect(resultado.recintosViaveis.length).toBe(2);
+    });
+
+    test('Deve rejeitar números não naturais no parâmetro de quantidade.', () => {
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', -25);
+        expect(resultado.erro).toBe("Quantidade inválida");
+        expect(resultado.recintosViaveis).toBeFalsy();
+    });
+
+    test('Deve rejeitar string no parâmetro de quantidade.', () => {
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', 'a');
+        expect(resultado.erro).toBe("Quantidade inválida");
+        expect(resultado.recintosViaveis).toBeFalsy();
+    });
+
+    test('Deve rejeitar number no parâmetro do animal.', () => {
+        const resultado = new RecintosZoo().analisaRecintos(1, 1);
+        expect(resultado.erro).toBe("Animal inválido");
+        expect(resultado.recintosViaveis).toBeFalsy();
+    });
+
+    test('Deve rejeitar numeros não naturais.', () => {
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', 1.5);
+        expect(resultado.erro).toBe("Quantidade inválida");
+        expect(resultado.recintosViaveis).toBeFalsy();
     });
 
 });
